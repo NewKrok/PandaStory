@@ -17,6 +17,8 @@ package net.fpp.pandastory.game.module.character
 	import net.fpp.pandastory.game.module.characteranimation.ICharacterAnimationModule;
 	import net.fpp.pandastory.game.module.physicsworld.IPhysicsWorldModule;
 
+	import starling.display.DisplayObjectContainer;
+
 	public class CharacterModule extends AModule implements ICharacterModule
 	{
 		[Inject]
@@ -25,12 +27,16 @@ package net.fpp.pandastory.game.module.character
 		[Inject]
 		public var characterAnimationModule:ICharacterAnimationModule;
 
+		[Inject(id='worldView')]
+		public var worldView:DisplayObjectContainer;
+
 		private var _characterModuleView:CharacterModuleView;
 		private var _characterModel:CharacterModel;
 
 		public function CharacterModule()
 		{
 			this._characterModuleView = this.createModuleView( CharacterModuleView ) as CharacterModuleView;
+
 			this._characterModel = this.createModel( CharacterModel ) as CharacterModel;
 		}
 
@@ -57,6 +63,8 @@ package net.fpp.pandastory.game.module.character
 			var weldJointDef:b2WeldJointDef = new b2WeldJointDef();
 			weldJointDef.Initialize( this._characterModel.characterRadiusPhysicsObject, this._characterModel.characterPhysicsObject, this._characterModel.characterRadiusPhysicsObject.GetWorldCenter() );
 			physicsWorldModule.createJoint( weldJointDef );
+
+			this.worldView.addChild( this._characterModuleView );
 		}
 
 		public function getCharacterPhysicsObject():b2Body
@@ -105,7 +113,7 @@ package net.fpp.pandastory.game.module.character
 
 			this._characterModuleView.update();
 
-			if ( this._characterModuleView.y > 500 )
+			if( this._characterModuleView.y > 500 )
 			{
 				this._characterModel.characterPhysicsObject.SetLinearVelocity( new b2Vec2( 0, 0 ) );
 				this._characterModel.characterPhysicsObject.SetPosition( new b2Vec2( 0, 0 ) );
@@ -139,6 +147,17 @@ package net.fpp.pandastory.game.module.character
 		public function getUpdateFrequency():int
 		{
 			return 0;
+		}
+
+		override public function dispose():void
+		{
+			super.dispose();
+
+			this.physicsWorldModule = null;
+			this.characterAnimationModule = null;
+			this.worldView = null;
+			this._characterModuleView = null;
+			this._characterModel = null;
 		}
 	}
 }

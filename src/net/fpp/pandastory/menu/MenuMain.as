@@ -13,6 +13,7 @@ package net.fpp.pandastory.menu
 	import net.fpp.pandastory.menu.module.menulayout.MenuLayoutModule;
 
 	import starling.display.Button;
+	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.Sprite;
 
@@ -22,8 +23,13 @@ package net.fpp.pandastory.menu
 
 		private var _startGameButton:Button;
 
+		private var _guiView:Sprite;
+
 		public function MenuMain()
 		{
+			this.addChild( this._guiView = new Sprite() );
+			this._injector.mapToValue( DisplayObjectContainer, this._guiView, 'guiView' );
+
 			this.loadStarlingAssets();
 		}
 
@@ -47,7 +53,7 @@ package net.fpp.pandastory.menu
 
 			this.createUI();
 
-			this.createModule( '', MenuLayoutModule, IMenuLayoutModule, [ this._view ] );
+			this.createModule( '', MenuLayoutModule, IMenuLayoutModule, [ this._guiView ] );
 
 			this.registerHandlers();
 		}
@@ -58,7 +64,7 @@ package net.fpp.pandastory.menu
 			this._background.x = stage.stageWidth / 2 - this._background.width / 2;
 			this._background.y = stage.stageHeight / 2 - this._background.height / 2;
 
-			this._view.addChild( this._background );
+			this._guiView.addChild( this._background );
 		}
 
 		private function createUI():void
@@ -66,7 +72,7 @@ package net.fpp.pandastory.menu
 			this._startGameButton = new Button( StaticAssetManager.instance.getTexture( CSkinId.START_GAME_BUTTON ) );
 			this._startGameButton.name = 'startGameButton';
 
-			this._view.addChild( this._startGameButton );
+			this._guiView.addChild( this._startGameButton );
 		}
 
 		private function registerHandlers():void
@@ -81,6 +87,9 @@ package net.fpp.pandastory.menu
 
 			this._startGameButton.removeFromParent( true );
 			this._startGameButton = null;
+
+			this._guiView.removeFromParent( true );
+			this._guiView = null;
 
 			super.dispose();
 

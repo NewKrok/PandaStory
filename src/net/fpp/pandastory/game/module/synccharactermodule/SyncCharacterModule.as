@@ -7,10 +7,15 @@ package net.fpp.pandastory.game.module.synccharactermodule
 	import net.fpp.pandastory.game.module.characteranimation.ICharacterAnimationModule;
 	import net.fpp.pandastory.game.module.synccharactermodule.view.SyncCharacterModuleView;
 
+	import starling.display.DisplayObjectContainer;
+
 	public class SyncCharacterModule extends AModule implements ISyncCharacterModule
 	{
 		[Inject]
 		public var characterAnimationModule:ICharacterAnimationModule;
+
+		[Inject(id='worldView')]
+		public var worldView:DisplayObjectContainer;
 
 		private var _syncCharacterModuleView:SyncCharacterModuleView;
 		private var _syncCharacterModel:SyncCharacterModel;
@@ -18,12 +23,15 @@ package net.fpp.pandastory.game.module.synccharactermodule
 		public function SyncCharacterModule()
 		{
 			this._syncCharacterModuleView = this.createModuleView( SyncCharacterModuleView ) as SyncCharacterModuleView;
+
 			this._syncCharacterModel = this.createModel( SyncCharacterModel ) as SyncCharacterModel;
 		}
 
 		override public function onInited():void
 		{
 			this._syncCharacterModel.setCharacterAnimationModule( this.characterAnimationModule );
+
+			this.worldView.addChild( this._syncCharacterModuleView );
 
 			this._syncCharacterModuleView.init();
 		}
@@ -52,6 +60,16 @@ package net.fpp.pandastory.game.module.synccharactermodule
 		{
 			this._syncCharacterModuleView.x = x;
 			this._syncCharacterModuleView.y = y;
+		}
+
+		override public function dispose():void
+		{
+			super.dispose();
+
+			this.characterAnimationModule = null;
+			this.worldView = null;
+			this._syncCharacterModuleView = null;
+			this._syncCharacterModel = null;
 		}
 	}
 }

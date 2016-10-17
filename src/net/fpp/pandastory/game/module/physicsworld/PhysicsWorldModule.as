@@ -73,5 +73,13 @@ package net.fpp.pandastory.game.module.physicsworld
 		{
 			return 0;
 		}
+
+		override public function dispose():void
+		{
+			super.dispose();
+
+			this.levelDataVO = null;
+			this._physicsWorldModel = null;
+		}
 	}
 }

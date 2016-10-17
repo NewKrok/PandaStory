@@ -5,29 +5,34 @@ package net.fpp.pandastory.game.module.physicsdebug
 {
 	import Box2D.Dynamics.b2DebugDraw;
 
-	import flash.display.Sprite;
-
 	import net.fpp.common.starling.module.AModule;
 	import net.fpp.pandastory.constant.CPhysics;
 	import net.fpp.pandastory.game.module.physicsdebug.view.PhysicsWorldModuleView;
 	import net.fpp.pandastory.game.module.physicsworld.IPhysicsWorldModule;
+
+	import starling.display.DisplayObjectContainer;
 
 	public class PhysicsDebugModule extends AModule implements IPhysicsDebugModule
 	{
 		[Inject]
 		public var physicsWorldModule:IPhysicsWorldModule;
 
-		private var physicsWorldModuleView:PhysicsWorldModuleView;
+		[Inject(id='worldView')]
+		public var worldView:DisplayObjectContainer;
+
+		private var _physicsWorldModuleView:PhysicsWorldModuleView;
 
 		public function PhysicsDebugModule()
 		{
-			this.physicsWorldModuleView = this.createModuleView( PhysicsWorldModuleView ) as PhysicsWorldModuleView;
+			this._physicsWorldModuleView = this.createModuleView( PhysicsWorldModuleView ) as PhysicsWorldModuleView;
 		}
 
 		override public function onInited():void
 		{
+			this.worldView.addChild( this._physicsWorldModuleView );
+
 			var debugDraw:b2DebugDraw = new b2DebugDraw();
-			debugDraw.SetSprite( this.physicsWorldModuleView.getDebugSprite() );
+			debugDraw.SetSprite( this._physicsWorldModuleView.getDebugSprite() );
 			debugDraw.SetDrawScale( CPhysics.PIXELS_TO_METRE );
 			debugDraw.SetLineThickness( .5 );
 			debugDraw.SetAlpha( .5 );
@@ -41,12 +46,21 @@ package net.fpp.pandastory.game.module.physicsdebug
 		{
 			this.physicsWorldModule.drawDebugData();
 
-			this.physicsWorldModuleView.update();
+			this._physicsWorldModuleView.update();
 		}
 
 		public function getUpdateFrequency():int
 		{
 			return 200;
+		}
+
+		override public function dispose():void
+		{
+			super.dispose();
+
+			this.physicsWorldModule = null;
+			this.worldView = null;
+			this._physicsWorldModuleView = null;
 		}
 	}
 }

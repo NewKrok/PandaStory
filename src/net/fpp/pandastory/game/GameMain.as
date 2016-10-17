@@ -33,6 +33,8 @@ package net.fpp.pandastory.game
 	import net.fpp.pandastory.game.service.websocketservice.IWebSocketService;
 	import net.fpp.pandastory.game.service.websocketservice.WebSocketService;
 
+	import starling.display.DisplayObjectContainer;
+
 	import starling.display.Image;
 	import starling.display.Sprite;
 
@@ -41,6 +43,9 @@ package net.fpp.pandastory.game
 		private var _background:Image;
 
 		private var _levelData:LevelDataVO;
+
+		private var _worldView:Sprite;
+		private var _guiView:Sprite;
 
 		public function GameMain()
 		{
@@ -60,7 +65,11 @@ package net.fpp.pandastory.game
 
 			this._injector.mapToValue( LevelDataVO, this._levelData );
 
-			this._injector.mapToValue( Sprite, this._view, 'worldView' );
+			this.addChild( this._worldView = new Sprite() );
+			this._injector.mapToValue( DisplayObjectContainer, this._worldView, 'worldView' );
+
+			this.addChild( this._guiView = new Sprite() );
+			this._injector.mapToValue( DisplayObjectContainer, this._guiView, 'guiView' );
 
 			this.loadStarlingAssets();
 		}
@@ -132,7 +141,7 @@ package net.fpp.pandastory.game
 		{
 			this._background = new Image( StaticAssetManager.instance.getTexture( CSkinId.GAME_BACKGROUND_WORLD_0_PART_0 ) );
 
-			this._view.parent.addChildAt( this._background, 0 );
+			this.addChildAt( this._background, 0 );
 		}
 
 		private function registerHandlers():void
@@ -143,6 +152,12 @@ package net.fpp.pandastory.game
 		{
 			this._background.removeFromParent( true );
 			this._background = null;
+
+			this._worldView.removeFromParent( true );
+			this._worldView = null;
+
+			this._guiView.removeFromParent( true );
+			this._guiView = null;
 
 			super.dispose();
 

@@ -12,10 +12,15 @@ package net.fpp.pandastory.game.module.charactercontroller
 	import net.fpp.pandastory.game.module.character.constant.CCharacterState;
 	import net.fpp.pandastory.game.module.charactercontroller.view.CharacterControllerModuleView;
 
+	import starling.display.DisplayObjectContainer;
+
 	public class CharacterControllerModule extends AModule implements ICharacterControllerModule
 	{
 		[Inject]
 		public var characterModule:ICharacterModule;
+
+		[Inject(id='guiView')]
+		public var guiView:DisplayObjectContainer;
 
 		private var _characterControllerModuleView:CharacterControllerModuleView;
 		private var _characterControllerModel:CharacterControllerModel;
@@ -23,12 +28,13 @@ package net.fpp.pandastory.game.module.charactercontroller
 		public function CharacterControllerModule()
 		{
 			this._characterControllerModuleView = this.createModuleView( CharacterControllerModuleView ) as CharacterControllerModuleView;
+
 			this._characterControllerModel = this.createModel( CharacterControllerModel ) as CharacterControllerModel;
 		}
 
 		override public function onInited():void
 		{
-			this._view.stage.addChild( this._view );
+			this.guiView.addChild( this._characterControllerModuleView );
 		}
 
 		public function onUpdate():void
@@ -172,6 +178,16 @@ package net.fpp.pandastory.game.module.charactercontroller
 		public function getUpdateFrequency():int
 		{
 			return 0;
+		}
+
+		override public function dispose():void
+		{
+			super.dispose();
+
+			this.characterModule = null;
+			this.guiView = null;
+			this._characterControllerModuleView = null;
+			this._characterControllerModel = null;
 		}
 	}
 }

@@ -7,13 +7,12 @@ package net.fpp.pandastory.game.module.camera
 	import net.fpp.pandastory.game.module.character.ICharacterModule;
 
 	import starling.display.DisplayObject;
-
-	import starling.display.Sprite;
+	import starling.display.DisplayObjectContainer;
 
 	public class CameraModule extends AModule implements ICameraModule
 	{
 		[Inject(id='worldView')]
-		public var worldView:Sprite;
+		public var worldView:DisplayObjectContainer;
 
 		[Inject]
 		public var characterModule:ICharacterModule;

@@ -3,16 +3,19 @@
  */
 package net.fpp.pandastory.game.module.terrain
 {
-	import flash.geom.Rectangle;
-
 	import net.fpp.common.starling.module.AModule;
 	import net.fpp.pandastory.game.module.physicsworld.vo.LevelDataVO;
 	import net.fpp.pandastory.game.module.terrain.view.TerrainModuleView;
+
+	import starling.display.DisplayObjectContainer;
 
 	public class TerrainModule extends AModule implements ITerrainModule
 	{
 		[Inject]
 		public var levelDataVO:LevelDataVO;
+
+		[Inject(id='worldView')]
+		public var worldView:DisplayObjectContainer;
 
 		private var _terrainModuleView:TerrainModuleView;
 
@@ -24,6 +27,17 @@ package net.fpp.pandastory.game.module.terrain
 		override public function onInited():void
 		{
 			this._terrainModuleView.drawStaticTerrains( this.levelDataVO.terrains );
+
+			this.worldView.addChild( this._terrainModuleView );
+		}
+
+		override public function dispose():void
+		{
+			super.dispose();
+
+			this.levelDataVO = null;
+			this.worldView = null;
+			this._terrainModuleView = null;
 		}
 	}
 }

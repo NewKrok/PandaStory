@@ -30,6 +30,5 @@ package net.fpp.pandastory.menu.module.menulayout.view
 			this._startGameButton.x = this.stage.stageWidth / 2 - this._startGameButton.width / 2;
 			this._startGameButton.y = this.stage.stageHeight / 2 - this._startGameButton.height / 2;
 		}
-
 	}
 }
