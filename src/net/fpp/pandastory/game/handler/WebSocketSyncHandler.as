@@ -28,9 +28,30 @@ package net.fpp.pandastory.game.handler
 		{
 			var characterModuleData:CharacterModuleSyncDataVO = e.data as CharacterModuleSyncDataVO;
 
-			this.syncCharacterModule.setPosition( characterModuleData.x, characterModuleData.y );
-			this.syncCharacterModule.setCharacterDirection( characterModuleData.direction );
-			this.syncCharacterModule.setCharacterState( characterModuleData.characterState );
+			if ( characterModuleData.x || characterModuleData.y )
+			{
+				if ( !characterModuleData.x )
+				{
+					characterModuleData.x = syncCharacterModule.getXPosition();
+				}
+
+				if ( !characterModuleData.y )
+				{
+					characterModuleData.y = syncCharacterModule.getYPosition();
+				}
+
+				this.syncCharacterModule.setPosition( characterModuleData.x, characterModuleData.y );
+			}
+
+			if ( characterModuleData.direction )
+			{
+				this.syncCharacterModule.setCharacterDirection( characterModuleData.direction );
+			}
+
+			if ( characterModuleData.characterState )
+			{
+				this.syncCharacterModule.setCharacterState( characterModuleData.characterState );
+			}
 		}
 
 		public function dispose():void

@@ -62,6 +62,16 @@ package net.fpp.pandastory.game.module.synccharactermodule
 			this._syncCharacterModuleView.y = y;
 		}
 
+		public function getXPosition():Number
+		{
+			return this._syncCharacterModuleView.x;
+		}
+
+		public function getYPosition():Number
+		{
+			return this._syncCharacterModuleView.y;
+		}
+
 		override public function dispose():void
 		{
 			super.dispose();

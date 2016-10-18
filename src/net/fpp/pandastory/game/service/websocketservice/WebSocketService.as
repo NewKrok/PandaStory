@@ -8,6 +8,8 @@ package net.fpp.pandastory.game.service.websocketservice
 	import com.worlize.websocket.WebSocketEvent;
 	import com.worlize.websocket.WebSocketMessage;
 
+	import flash.external.ExternalInterface;
+
 	import net.fpp.common.starling.module.AService;
 	import net.fpp.pandastory.game.service.websocketservice.constant.CSocketHeader;
 	import net.fpp.pandastory.game.service.websocketservice.event.WebSocketServiceEvent;
@@ -27,7 +29,7 @@ package net.fpp.pandastory.game.service.websocketservice
 		{
 			this._parser = new SyncDataParser();
 
-			this._websocket = new WebSocket( "ws://apost.no-ip.biz:57076/ws", "*" );
+			this._websocket = new WebSocket( "ws://88.99.14.215:8080/ws", "*" );
 			this._websocket.addEventListener( WebSocketEvent.CLOSED, handleWebSocketClosed );
 			this._websocket.addEventListener( WebSocketEvent.OPEN, handleWebSocketOpen );
 			this._websocket.addEventListener( WebSocketEvent.MESSAGE, handleWebSocketMessage );
@@ -36,11 +38,20 @@ package net.fpp.pandastory.game.service.websocketservice
 
 		private function handleWebSocketOpen( event:WebSocketEvent ):void
 		{
+			if ( ExternalInterface.available )
+			{
+				ExternalInterface.call( 'console.log', 'On Connected' );
+			}
+			trace( "On Connected" );
 			this.dispatchEventWith( WebSocketServiceEvent.ON_CONNECTED );
 		}
 
 		private function handleWebSocketClosed( event:WebSocketEvent ):void
 		{
+			if ( ExternalInterface.available )
+			{
+				ExternalInterface.call( 'console.log', 'On Disconnected' );
+			}
 			trace( "Disconnected" );
 		}
 
@@ -51,6 +62,11 @@ package net.fpp.pandastory.game.service.websocketservice
 
 		private function handleWebSocketMessage( event:WebSocketEvent ):void
 		{
+			if ( ExternalInterface.available )
+			{
+				ExternalInterface.call( 'console.log', 'On Message: ' + event.message.type );
+			}
+
 			if( event.message.type === WebSocketMessage.TYPE_UTF8 )
 			{
 				try
@@ -94,7 +110,7 @@ package net.fpp.pandastory.game.service.websocketservice
 
 		public function sync( data:Object ):void
 		{
-			this.sendData( CSocketHeader.SYNC, data );
+			//this.sendData( CSocketHeader.SYNC, data );
 		}
 
 		private function sendData( header:String, data:Object ):void
@@ -104,6 +120,11 @@ package net.fpp.pandastory.game.service.websocketservice
 			webSocketDataVO.data = data;
 
 			var webSocketDataJSON:String = JSON.stringify( webSocketDataVO );
+
+			if ( ExternalInterface.available )
+			{
+				ExternalInterface.call( 'console.log', 'Send Message: ' + webSocketDataJSON );
+			}
 
 			this._websocket.sendUTF( webSocketDataJSON );
 		}

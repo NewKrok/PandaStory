@@ -57,7 +57,7 @@ package net.fpp.pandastory.game.module.charactercontroller
 			var maxSpeed:Number = 7;
 			var acceleration:Number = .6;
 			var deceleration:Number = .6;
-			var jumpPower:Number = 35;
+			var jumpPower:Number = 12;
 			var maxJumpTime:Number = 100;
 
 			if( this._characterControllerModel.isRightActive )
@@ -97,8 +97,6 @@ package net.fpp.pandastory.game.module.charactercontroller
 				currentVelocity.x *= deceleration;
 			}
 
-			characterPhysicsObject.SetLinearVelocity( currentVelocity );
-
 			if( this._characterControllerModel.isJumpActive )
 			{
 				var now:Number = new Date().time;
@@ -113,12 +111,14 @@ package net.fpp.pandastory.game.module.charactercontroller
 					}
 				}
 
-				characterPhysicsObject.ApplyForce( new b2Vec2( 0, -jumpPower ), characterPhysicsObject.GetWorldCenter() );
+				currentVelocity.y = -jumpPower;
 			}
 			else
 			{
 				this._characterControllerModel.isJumpTriggered = false;
 			}
+
+			characterPhysicsObject.SetLinearVelocity( currentVelocity );
 		}
 
 		private function updateCharacterOnAir():void

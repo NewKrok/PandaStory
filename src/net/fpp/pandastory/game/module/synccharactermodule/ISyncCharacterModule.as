@@ -10,5 +10,9 @@ package net.fpp.pandastory.game.module.synccharactermodule
 		function setCharacterState( characterState:String ):void;
 
 		function setPosition( x:Number, y:Number ):void;
+
+		function getXPosition():Number;
+
+		function getYPosition():Number;
 	}
 }
