@@ -11,7 +11,7 @@ package net.fpp.pandastory.game.module.physicsworld
 	import flash.geom.Rectangle;
 
 	import net.fpp.common.starling.module.IUpdatableModule;
-	import net.fpp.pandastory.game.module.physicsworld.vo.LevelDataVO;
+	import net.fpp.pandastory.game.vo.LevelVO;
 
 	public interface IPhysicsWorldModule extends IUpdatableModule
 	{

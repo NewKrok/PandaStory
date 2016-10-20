@@ -3,6 +3,9 @@
  */
 package net.fpp.pandastory.game.module.synccharactermodule
 {
+	import com.greensock.TweenLite;
+	import com.greensock.easing.Linear;
+
 	import net.fpp.common.starling.module.AModule;
 	import net.fpp.pandastory.game.module.characteranimation.ICharacterAnimationModule;
 	import net.fpp.pandastory.game.module.synccharactermodule.view.SyncCharacterModuleView;
@@ -58,8 +61,8 @@ package net.fpp.pandastory.game.module.synccharactermodule
 
 		public function setPosition( x:Number, y:Number ):void
 		{
-			this._syncCharacterModuleView.x = x;
-			this._syncCharacterModuleView.y = y;
+			TweenLite.killTweensOf( this._syncCharacterModuleView );
+			TweenLite.to( this._syncCharacterModuleView, .1, {x: x, y: y, ease: Linear.ease} );
 		}
 
 		public function getXPosition():Number

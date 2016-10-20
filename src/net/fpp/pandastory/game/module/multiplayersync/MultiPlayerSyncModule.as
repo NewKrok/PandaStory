@@ -3,7 +3,10 @@
  */
 package net.fpp.pandastory.game.module.multiplayersync
 {
+	import flash.utils.Dictionary;
+
 	import net.fpp.common.starling.module.AModule;
+	import net.fpp.pandastory.config.CharacterDataSyncConfig;
 	import net.fpp.pandastory.game.module.character.ICharacterModule;
 	import net.fpp.pandastory.game.service.websocketservice.IWebSocketService;
 
@@ -17,51 +20,61 @@ package net.fpp.pandastory.game.module.multiplayersync
 		[Inject]
 		public var characterModule:ICharacterModule;
 
-		private var _lastSendedData:Object = { x:0, y:0, direction:1, characterState:'' };
+		private var _lastSendedData:Object;
 
-		public function MultiPlayerSyncModule()
+		private var _syncKeys:Dictionary;
+
+		public function MultiPlayerSyncModule( characterDataSyncConfig:CharacterDataSyncConfig )
 		{
+			this._lastSendedData = {x: 0, y: 0, direction: 0, characterState: ''};
+
+			this._syncKeys = characterDataSyncConfig.getSyncKeyConfig();
 		}
 
 		public function onUpdate():void
 		{
 			var characterView:DisplayObject = this.characterModule.getView();
 
-			var syncData:Object = {};
+			var syncData:Object = new Object;
 			var hasNewData:Boolean = false;
 
-			if ( this._lastSendedData.x != Math.round( characterView.x ) )
+			if( this._lastSendedData.x != Math.round( characterView.x ) )
 			{
 				syncData.x = Math.round( characterView.x );
-				this._lastSendedData.x = syncData.x;
 				hasNewData = true;
 			}
 
-			if ( this._lastSendedData.y != Math.round( characterView.y ) )
+			if( this._lastSendedData.y != Math.round( characterView.y ) )
 			{
 				syncData.y = Math.round( characterView.y );
-				this._lastSendedData.y = syncData.y;
 				hasNewData = true;
 			}
 
-			if ( this._lastSendedData.direction != this.characterModule.getDirection() )
+			if( this._lastSendedData.direction != this.characterModule.getDirection() )
 			{
 				syncData.direction = this.characterModule.getDirection();
-				this._lastSendedData.direction = syncData.direction;
 				hasNewData = true;
 			}
 
-			if ( this._lastSendedData.characterState != this.characterModule.getState() )
+			if( this._lastSendedData.characterState != this.characterModule.getState() )
 			{
 				syncData.characterState = this.characterModule.getState();
-				this._lastSendedData.characterState = syncData.characterState;
 				hasNewData = true;
 			}
 
-			if ( hasNewData )
+			if( hasNewData )
 			{
-				this.webSocketService.sync( syncData );
-				this._lastSendedData = syncData;
+				var convertedSyncData:Object = {};
+				for( var key:String in syncData )
+				{
+					if( syncData[ key ] )
+					{
+						this._lastSendedData[ key ] = syncData[ key ];
+						convertedSyncData[ this._syncKeys[ key ] ] = syncData[ key ];
+					}
+				}
+
+				this.webSocketService.sync( convertedSyncData );
 			}
 		}
 

@@ -5,7 +5,7 @@ package net.fpp.pandastory.game.service.websocketservice.vo
 {
 	public class WebSocketDataVO
 	{
-		public var header:String;
-		public var data:Object;
+		public var h:String; // Header - Just 'h' because of the sync optimization
+		public var d:Object; // Data - Just 'd' because of the sync optimization
 	}
 }

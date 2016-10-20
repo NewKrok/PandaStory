@@ -4,7 +4,7 @@
 package net.fpp.pandastory.game.module.terrain
 {
 	import net.fpp.common.starling.module.AModule;
-	import net.fpp.pandastory.game.module.physicsworld.vo.LevelDataVO;
+	import net.fpp.pandastory.game.vo.LevelVO;
 	import net.fpp.pandastory.game.module.terrain.view.TerrainModuleView;
 
 	import starling.display.DisplayObjectContainer;
@@ -12,7 +12,7 @@ package net.fpp.pandastory.game.module.terrain
 	public class TerrainModule extends AModule implements ITerrainModule
 	{
 		[Inject]
-		public var levelDataVO:LevelDataVO;
+		public var levelDataVO:LevelVO;
 
 		[Inject(id='worldView')]
 		public var worldView:DisplayObjectContainer;
@@ -26,7 +26,7 @@ package net.fpp.pandastory.game.module.terrain
 
 		override public function onInited():void
 		{
-			this._terrainModuleView.drawStaticTerrains( this.levelDataVO.terrains );
+			this._terrainModuleView.createStaticTerrains( this.levelDataVO.terrain );
 
 			this.worldView.addChild( this._terrainModuleView );
 		}

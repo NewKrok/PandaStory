@@ -11,19 +11,20 @@ package net.fpp.pandastory.game.module.physicsworld
 	import flash.geom.Rectangle;
 
 	import net.fpp.common.starling.module.AModel;
+	import net.fpp.pandastory.game.vo.TerrainVO;
 	import net.fpp.pandastory.util.PhysicsUtil;
 
 	public class PhysicsWorldModel extends AModel
 	{
 		public var physicsWorld:b2World;
 
-		public function createRectangles( rectangles:Vector.<Rectangle> ):void
+		public function createTerrains( terrainVOs:Vector.<TerrainVO> ):void
 		{
-			var length:int = rectangles.length;
+			var length:int = terrainVOs.length;
 
 			for( var i:int = 0; i < length; i++ )
 			{
-				this.createStaticRectangle( rectangles[i] );
+				this.createStaticRectangle( terrainVOs[ i ].rectangle );
 			}
 		}
 

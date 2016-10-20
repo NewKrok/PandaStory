@@ -3,11 +3,11 @@
  */
 package net.fpp.pandastory.game
 {
-	import flash.geom.Rectangle;
-
 	import net.fpp.common.starling.StaticAssetManager;
 	import net.fpp.common.starling.module.AApplicationContext;
 	import net.fpp.pandastory.asset.CommonAssets;
+	import net.fpp.pandastory.config.CharacterDataSyncConfig;
+	import net.fpp.pandastory.config.level.Level1VO;
 	import net.fpp.pandastory.constant.CSkinId;
 	import net.fpp.pandastory.game.events.GameMainEvent;
 	import net.fpp.pandastory.game.handler.CharacterAnimationLoadedHandler;
@@ -25,16 +25,15 @@ package net.fpp.pandastory.game
 	import net.fpp.pandastory.game.module.multiplayersync.MultiPlayerSyncModule;
 	import net.fpp.pandastory.game.module.physicsworld.IPhysicsWorldModule;
 	import net.fpp.pandastory.game.module.physicsworld.PhysicsWorldModule;
-	import net.fpp.pandastory.game.module.physicsworld.vo.LevelDataVO;
 	import net.fpp.pandastory.game.module.synccharactermodule.ISyncCharacterModule;
 	import net.fpp.pandastory.game.module.synccharactermodule.SyncCharacterModule;
 	import net.fpp.pandastory.game.module.terrain.ITerrainModule;
 	import net.fpp.pandastory.game.module.terrain.TerrainModule;
 	import net.fpp.pandastory.game.service.websocketservice.IWebSocketService;
 	import net.fpp.pandastory.game.service.websocketservice.WebSocketService;
+	import net.fpp.pandastory.game.vo.LevelVO;
 
 	import starling.display.DisplayObjectContainer;
-
 	import starling.display.Image;
 	import starling.display.Sprite;
 
@@ -42,7 +41,7 @@ package net.fpp.pandastory.game
 	{
 		private var _background:Image;
 
-		private var _levelData:LevelDataVO;
+		private var _characterDataSyncConfig:CharacterDataSyncConfig;
 
 		private var _worldView:Sprite;
 		private var _guiView:Sprite;
@@ -51,19 +50,11 @@ package net.fpp.pandastory.game
 		{
 			super();
 
+			this._characterDataSyncConfig = new CharacterDataSyncConfig();
+
 			this._injector.mapToValue( IGameMain, this );
 
-			this._levelData = new LevelDataVO();
-			this._levelData.terrains = new <Rectangle>[
-				new Rectangle( -20, 290, 400, 16 ),
-				new Rectangle( 300, 225, 20, 16 ),
-				new Rectangle( 100, 150, 100, 16 ),
-				new Rectangle( 250, 400, 170, 16 ),
-				new Rectangle( 650, 350, 150, 16 ),
-				new Rectangle( 750, 270, 150, 16 )
-			]
-
-			this._injector.mapToValue( LevelDataVO, this._levelData );
+			this._injector.mapToValue( LevelVO, new Level1VO() );
 
 			this.addChild( this._worldView = new Sprite() );
 			this._injector.mapToValue( DisplayObjectContainer, this._worldView, 'worldView' );
@@ -103,7 +94,7 @@ package net.fpp.pandastory.game
 
 		private function connectToServer():void
 		{
-			var webSocketService:IWebSocketService = this.createService( '', WebSocketService, IWebSocketService ) as IWebSocketService;
+			var webSocketService:IWebSocketService = this.createService( '', WebSocketService, IWebSocketService, [ this._characterDataSyncConfig ] ) as IWebSocketService;
 
 			this.createHandler( WebSocketConnectedHandler );
 
@@ -130,7 +121,7 @@ package net.fpp.pandastory.game
 			//this.createModule( '', PhysicsDebugModule, IPhysicsDebugModule )
 			this.createModule( '', CharacterControllerModule, ICharacterControllerModule );
 			this.createModule( '', CameraModule, ICameraModule );
-			this.createModule( '', MultiPlayerSyncModule, IMultiPlayerSyncModule );
+			this.createModule( '', MultiPlayerSyncModule, IMultiPlayerSyncModule, [ this._characterDataSyncConfig ] );
 
 			this.registerHandlers();
 
@@ -163,8 +154,6 @@ package net.fpp.pandastory.game
 
 			//StaticAssetManager.instance.removeTextureAtlas( 'atlas_common' );
 			//StaticAssetManager.instance.removeXml( 'atlas_common_xml' );
-
-			this._levelData = null;
 
 			this.dispatchEventWith( GameMainEvent.DISPOSED );
 		}

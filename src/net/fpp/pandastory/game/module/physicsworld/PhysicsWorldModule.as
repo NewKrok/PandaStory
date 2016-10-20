@@ -14,13 +14,13 @@ package net.fpp.pandastory.game.module.physicsworld
 
 	import net.fpp.common.starling.module.AModule;
 	import net.fpp.pandastory.constant.CPhysics;
-	import net.fpp.pandastory.game.module.physicsworld.vo.LevelDataVO;
+	import net.fpp.pandastory.game.vo.LevelVO;
 	import net.fpp.pandastory.util.PhysicsUtil;
 
 	public class PhysicsWorldModule extends AModule implements IPhysicsWorldModule
 	{
 		[Inject]
-		public var levelDataVO:LevelDataVO;
+		public var levelDataVO:LevelVO;
 
 		private var _physicsWorldModel:PhysicsWorldModel;
 
@@ -35,7 +35,7 @@ package net.fpp.pandastory.game.module.physicsworld
 
 		override public function onInited():void
 		{
-			this._physicsWorldModel.createRectangles( levelDataVO.terrains );
+			this._physicsWorldModel.createTerrains( levelDataVO.terrain );
 		}
 
 		public function createDynamicsRectangle( rectangle:Rectangle, friction:Number = 1, density:Number = 1, isFixedRotation:Boolean = false ):b2Body
