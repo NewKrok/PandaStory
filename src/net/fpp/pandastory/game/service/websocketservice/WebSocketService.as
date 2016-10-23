@@ -24,7 +24,6 @@ package net.fpp.pandastory.game.service.websocketservice
 		private var _parser:SyncDataParser;
 
 		private var _clientId:Number = Math.floor( Math.random() * 10000 );
-		private var _serverId:Number;
 
 		public function WebSocketService( characterDataSyncConfig:CharacterDataSyncConfig )
 		{
@@ -91,13 +90,7 @@ package net.fpp.pandastory.game.service.websocketservice
 				switch( webSocketDataVO.h )
 				{
 					case CSocketHeader.JOIN:
-						this._serverId = this._clientId;
-
-						this.sendData( CSocketHeader.SET_SERVER_ID, {serverId: this._serverId} );
-						break;
-
-					case CSocketHeader.SET_SERVER_ID:
-						this._serverId = webSocketDataVO.d.serverId;
+						this.dispatchEventWith( WebSocketServiceEvent.ON_PLAYER_JOINED, false, webSocketDataVO.d.characterTypeName );
 						break;
 
 					case CSocketHeader.SYNC:
@@ -112,9 +105,9 @@ package net.fpp.pandastory.game.service.websocketservice
 			this._websocket.connect();
 		}
 
-		public function join():void
+		public function join( characterTypeName:String ):void
 		{
-			this.sendData( CSocketHeader.JOIN, {clientId: this._clientId} );
+			this.sendData( CSocketHeader.JOIN, {clientId: this._clientId, characterTypeName: characterTypeName} );
 		}
 
 		public function sync( data:Object ):void

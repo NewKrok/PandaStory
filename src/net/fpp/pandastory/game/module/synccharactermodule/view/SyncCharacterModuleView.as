@@ -129,9 +129,12 @@ package net.fpp.pandastory.game.module.synccharactermodule.view
 			this._armature.animation.gotoAndPlay( CUnitAnimation.FALL, 0, 0 );
 		}
 
-		public function changeSkin( type:int ):void
+		public function updateSkin():void
 		{
-			//this.setHeadSkin( CUnitSkins.WARRIOR_HEADS[type] );2
+			this.setHeadSkin( this._characterModel.getCharacterVO().headSkin );
+			this.setBodySkin( this._characterModel.getCharacterVO().bodySkin );
+			this.setArmSkin( this._characterModel.getCharacterVO().armSkin );
+			this.setLegSkin( this._characterModel.getCharacterVO().legSkin );
 		}
 
 		private function setHeadSkin( name:String ):void
@@ -143,20 +146,49 @@ package net.fpp.pandastory.game.module.synccharactermodule.view
 			bone.display = newHead;
 		}
 
-		private function aramtureEventHandler( e:AnimationEvent ):void
+		private function setBodySkin( name:String ):void
 		{
-			this._currentAnimation = '';
+			var newBody:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
 
-			this._armature.removeEventListener( AnimationEvent.COMPLETE, this.aramtureEventHandler );
+			var bone:Bone = this._armature.getBone( CUnitBones.BODY );
+			bone.display.dispose();
+			bone.display = newBody;
+		}
 
-			this.idle();
+		private function setArmSkin( name:String ):void
+		{
+			var newArm:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			var bone:Bone = this._armature.getBone( CUnitBones.ARM_FRONT );
+			bone.display.dispose();
+			bone.display = newArm;
+
+			newArm = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			bone = this._armature.getBone( CUnitBones.ARM_BACK );
+			bone.display.dispose();
+			bone.display = newArm;
+		}
+
+		private function setLegSkin( name:String ):void
+		{
+			var newLeg:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			var bone:Bone = this._armature.getBone( CUnitBones.LEG_FRONT );
+			bone.display.dispose();
+			bone.display = newLeg;
+
+			newLeg = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			bone = this._armature.getBone( CUnitBones.LEG_BACK );
+			bone.display.dispose();
+			bone.display = newLeg;
 		}
 
 		private function disposeArmature():void
 		{
 			WorldClock.clock.remove( this._armature );
 
-			this._armature.removeEventListener( AnimationEvent.COMPLETE, this.aramtureEventHandler );
 			this._armature.dispose();
 			this._armature = null;
 

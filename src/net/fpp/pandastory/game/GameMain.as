@@ -11,6 +11,8 @@ package net.fpp.pandastory.game
 	import net.fpp.pandastory.constant.CSkinId;
 	import net.fpp.pandastory.game.events.GameMainEvent;
 	import net.fpp.pandastory.game.handler.CharacterAnimationLoadedHandler;
+	import net.fpp.pandastory.game.handler.OnApplicationReady;
+	import net.fpp.pandastory.game.handler.OnPlayerJoinedHandler;
 	import net.fpp.pandastory.game.handler.WebSocketConnectedHandler;
 	import net.fpp.pandastory.game.handler.WebSocketSyncHandler;
 	import net.fpp.pandastory.game.module.camera.CameraModule;
@@ -52,15 +54,15 @@ package net.fpp.pandastory.game
 
 			this._characterDataSyncConfig = new CharacterDataSyncConfig();
 
-			this._injector.mapToValue( IGameMain, this );
+			this.injector.mapToValue( IGameMain, this );
 
-			this._injector.mapToValue( LevelVO, new Level1VO() );
+			this.injector.mapToValue( LevelVO, new Level1VO() );
 
 			this.addChild( this._worldView = new Sprite() );
-			this._injector.mapToValue( DisplayObjectContainer, this._worldView, 'worldView' );
+			this.injector.mapToValue( DisplayObjectContainer, this._worldView, 'worldView' );
 
 			this.addChild( this._guiView = new Sprite() );
-			this._injector.mapToValue( DisplayObjectContainer, this._guiView, 'guiView' );
+			this.injector.mapToValue( DisplayObjectContainer, this._guiView, 'guiView' );
 
 			this.loadStarlingAssets();
 		}
@@ -137,6 +139,8 @@ package net.fpp.pandastory.game
 
 		private function registerHandlers():void
 		{
+			this.registerHandler( new OnPlayerJoinedHandler() );
+			this.registerHandler( new OnApplicationReady() );
 		}
 
 		override public function dispose():void

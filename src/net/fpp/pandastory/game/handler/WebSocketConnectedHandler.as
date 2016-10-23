@@ -7,6 +7,7 @@ package net.fpp.pandastory.game.handler
 	import net.fpp.pandastory.game.IGameMain;
 	import net.fpp.pandastory.game.service.websocketservice.IWebSocketService;
 	import net.fpp.pandastory.game.service.websocketservice.event.WebSocketServiceEvent;
+	import net.fpp.pandastory.vo.PlayerInfoVO;
 
 	import starling.events.Event;
 
@@ -18,6 +19,9 @@ package net.fpp.pandastory.game.handler
 		[Inject]
 		public var gameMain:IGameMain;
 
+		[Inject]
+		public var playerInfoVO:PlayerInfoVO;
+
 		public function onInited():void
 		{
 			this.webSocketService.addEventListener( WebSocketServiceEvent.ON_CONNECTED, this.onConnected );
@@ -25,7 +29,7 @@ package net.fpp.pandastory.game.handler
 
 		private function onConnected( e:Event ):void
 		{
-			this.webSocketService.join();
+			this.webSocketService.join( playerInfoVO.characterVO.name );
 
 			this.gameMain.onWebSocketConnected();
 		}

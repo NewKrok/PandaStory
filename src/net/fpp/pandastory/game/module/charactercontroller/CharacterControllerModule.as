@@ -11,6 +11,7 @@ package net.fpp.pandastory.game.module.charactercontroller
 	import net.fpp.pandastory.game.module.character.constant.CCharacterDirection;
 	import net.fpp.pandastory.game.module.character.constant.CCharacterState;
 	import net.fpp.pandastory.game.module.charactercontroller.view.CharacterControllerModuleView;
+	import net.fpp.pandastory.vo.CharacterVO;
 
 	import starling.display.DisplayObjectContainer;
 
@@ -47,18 +48,23 @@ package net.fpp.pandastory.game.module.charactercontroller
 			{
 				this.updateCharacterOnAir();
 			}
+
+			if( this._characterControllerModel.isJumpTriggered )
+			{
+				this.runJumpRoutine();
+			}
 		}
 
 		private function updateCharacterOnGround():void
 		{
 			var characterPhysicsObject:b2Body = this.characterModule.getCharacterPhysicsObject();
 			var currentVelocity:b2Vec2 = characterPhysicsObject.GetLinearVelocity();
+			var characterVO:CharacterVO = this.characterModule.getCharacterVO();
 
-			var maxSpeed:Number = 7;
-			var acceleration:Number = .6;
-			var deceleration:Number = .6;
-			var jumpPower:Number = 12;
-			var maxJumpTime:Number = 100;
+			var maxSpeed:Number = characterVO.maxSpeed;
+			var acceleration:Number = characterVO.acceleration;
+			var deceleration:Number = characterVO.deceleration;
+			var maximumJumpPush:Number = characterVO.maximumJumpPush;
 
 			if( this._characterControllerModel.isRightActive )
 			{
@@ -99,19 +105,11 @@ package net.fpp.pandastory.game.module.charactercontroller
 
 			if( this._characterControllerModel.isJumpActive )
 			{
-				var now:Number = new Date().time;
-
-				if( ( !this._characterControllerModel.isJumpTriggered && this.characterModule.getIsOnGround() ) || ( this._characterControllerModel.isJumpTriggered && now - this._characterControllerModel.jumpActivateTime < maxJumpTime ) )
+				if( !this._characterControllerModel.isJumpTriggered )
 				{
-					if( !this._characterControllerModel.isJumpTriggered )
-					{
-						this._characterControllerModel.jumpActivateTime = now;
-
-						this._characterControllerModel.isJumpTriggered = true;
-					}
+					this._characterControllerModel.availableJumpPush = maximumJumpPush;
+					this._characterControllerModel.isJumpTriggered = true;
 				}
-
-				currentVelocity.y = -jumpPower;
 			}
 			else
 			{
@@ -125,10 +123,11 @@ package net.fpp.pandastory.game.module.charactercontroller
 		{
 			var characterPhysicsObject:b2Body = this.characterModule.getCharacterPhysicsObject();
 			var currentVelocity:b2Vec2 = characterPhysicsObject.GetLinearVelocity();
+			var characterVO:CharacterVO = this.characterModule.getCharacterVO();
 
-			var maxSpeedOnAir:Number = 5;
-			var acceleration:Number = .3;
-			var deceleration:Number = .6;
+			var maxSpeedOnAir:Number = characterVO.maxSpeedOnAir;
+			var acceleration:Number = characterVO.accelerationOnAir;
+			var deceleration:Number = characterVO.decelerationOnAir;
 
 			if( this._characterControllerModel.isRightActive )
 			{
@@ -172,12 +171,34 @@ package net.fpp.pandastory.game.module.charactercontroller
 				this.characterModule.setState( CCharacterState.JUMP );
 			}
 
+			if( !this._characterControllerModel.isJumpActive )
+			{
+				this._characterControllerModel.isJumpTriggered = false;
+			}
+
+			characterPhysicsObject.SetLinearVelocity( currentVelocity );
+		}
+
+		private function runJumpRoutine():void
+		{
+			var characterPhysicsObject:b2Body = this.characterModule.getCharacterPhysicsObject();
+			var currentVelocity:b2Vec2 = characterPhysicsObject.GetLinearVelocity();
+			var characterVO:CharacterVO = this.characterModule.getCharacterVO();
+
+			var jumpPower:Number = characterVO.jumpPower;
+
+			if( this._characterControllerModel.availableJumpPush > 0 )
+			{
+				this._characterControllerModel.availableJumpPush--;
+				currentVelocity.y = -jumpPower;
+			}
+
 			characterPhysicsObject.SetLinearVelocity( currentVelocity );
 		}
 
 		public function getUpdateFrequency():int
 		{
-			return 0;
+			return 20;
 		}
 
 		override public function dispose():void

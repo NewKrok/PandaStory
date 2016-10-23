@@ -26,7 +26,7 @@ package net.fpp.pandastory.game.module.multiplayersync
 
 		public function MultiPlayerSyncModule( characterDataSyncConfig:CharacterDataSyncConfig )
 		{
-			this._lastSendedData = {x: 0, y: 0, direction: 0, characterState: ''};
+			this._lastSendedData = {x: -1, y: -1, direction: 0, characterState: ''};
 
 			this._syncKeys = characterDataSyncConfig.getSyncKeyConfig();
 		}

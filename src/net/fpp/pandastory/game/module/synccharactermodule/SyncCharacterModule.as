@@ -9,6 +9,7 @@ package net.fpp.pandastory.game.module.synccharactermodule
 	import net.fpp.common.starling.module.AModule;
 	import net.fpp.pandastory.game.module.characteranimation.ICharacterAnimationModule;
 	import net.fpp.pandastory.game.module.synccharactermodule.view.SyncCharacterModuleView;
+	import net.fpp.pandastory.vo.CharacterVO;
 
 	import starling.display.DisplayObjectContainer;
 
@@ -26,6 +27,7 @@ package net.fpp.pandastory.game.module.synccharactermodule
 		public function SyncCharacterModule()
 		{
 			this._syncCharacterModuleView = this.createModuleView( SyncCharacterModuleView ) as SyncCharacterModuleView;
+			this._syncCharacterModuleView.visible = false;
 
 			this._syncCharacterModel = this.createModel( SyncCharacterModel ) as SyncCharacterModel;
 		}
@@ -61,18 +63,29 @@ package net.fpp.pandastory.game.module.synccharactermodule
 
 		public function setPosition( x:Number, y:Number ):void
 		{
+			this._syncCharacterModel.x = x;
+			this._syncCharacterModel.y = y;
+
 			TweenLite.killTweensOf( this._syncCharacterModuleView );
 			TweenLite.to( this._syncCharacterModuleView, .1, {x: x, y: y, ease: Linear.ease} );
 		}
 
 		public function getXPosition():Number
 		{
-			return this._syncCharacterModuleView.x;
+			return this._syncCharacterModel.x;
 		}
 
 		public function getYPosition():Number
 		{
-			return this._syncCharacterModuleView.y;
+			return this._syncCharacterModel.y;
+		}
+
+		public function setCharacterVO( value:CharacterVO ):void
+		{
+			this._syncCharacterModel.setCharacterVO( value );
+			this._syncCharacterModuleView.updateSkin();
+
+			this._syncCharacterModuleView.visible = true;
 		}
 
 		override public function dispose():void

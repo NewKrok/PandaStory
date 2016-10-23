@@ -21,14 +21,15 @@ package net.fpp.pandastory.menu
 	{
 		private var _background:Image;
 
-		private var _startGameButton:Button;
+		private var _startGameButtonA:Button;
+		private var _startGameButtonB:Button;
 
 		private var _guiView:Sprite;
 
 		public function MenuMain()
 		{
 			this.addChild( this._guiView = new Sprite() );
-			this._injector.mapToValue( DisplayObjectContainer, this._guiView, 'guiView' );
+			this.injector.mapToValue( DisplayObjectContainer, this._guiView, 'guiView' );
 
 			this.loadStarlingAssets();
 		}
@@ -69,15 +70,18 @@ package net.fpp.pandastory.menu
 
 		private function createUI():void
 		{
-			this._startGameButton = new Button( StaticAssetManager.instance.getTexture( CSkinId.START_GAME_BUTTON ) );
-			this._startGameButton.name = 'startGameButton';
+			this._startGameButtonA = new Button( StaticAssetManager.instance.getTexture( CSkinId.START_GAME_BUTTON ) );
+			this._startGameButtonA.name = 'startGameButtonA';
+			this._guiView.addChild( this._startGameButtonA );
 
-			this._guiView.addChild( this._startGameButton );
+			this._startGameButtonB = new Button( StaticAssetManager.instance.getTexture( CSkinId.START_GAME_BUTTON ) );
+			this._startGameButtonB.name = 'startGameButtonB';
+			this._guiView.addChild( this._startGameButtonB );
 		}
 
 		private function registerHandlers():void
 		{
-			this.registerHandler( new StartGameHandler( this._startGameButton ) );
+			this.registerHandler( new StartGameHandler( this._startGameButtonA, this._startGameButtonB ) );
 		}
 
 		override public function dispose():void
@@ -85,8 +89,11 @@ package net.fpp.pandastory.menu
 			this._background.removeFromParent( true );
 			this._background = null;
 
-			this._startGameButton.removeFromParent( true );
-			this._startGameButton = null;
+			this._startGameButtonA.removeFromParent( true );
+			this._startGameButtonA = null;
+
+			this._startGameButtonB.removeFromParent( true );
+			this._startGameButtonB = null;
 
 			this._guiView.removeFromParent( true );
 			this._guiView = null;

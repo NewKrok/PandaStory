@@ -7,6 +7,7 @@ package net.fpp.pandastory.game.module.character
 
 	import net.fpp.common.starling.module.AModel;
 	import net.fpp.pandastory.game.module.characteranimation.ICharacterAnimationModule;
+	import net.fpp.pandastory.vo.CharacterVO;
 
 	public class CharacterModel extends AModel
 	{
@@ -19,6 +20,8 @@ package net.fpp.pandastory.game.module.character
 		private var _direction:int;
 
 		private var _isOnGround:Boolean;
+
+		private var _characterVO:CharacterVO;
 
 		public function setCharacterAnimationModule( value:ICharacterAnimationModule ):void
 		{
@@ -58,6 +61,16 @@ package net.fpp.pandastory.game.module.character
 		public function getDirection():int
 		{
 			return this._direction;
+		}
+
+		public function setCharacterVO( value:CharacterVO ):void
+		{
+			this._characterVO = value;
+		}
+
+		public function getCharacterVO():CharacterVO
+		{
+			return this._characterVO;
 		}
 	}
 }

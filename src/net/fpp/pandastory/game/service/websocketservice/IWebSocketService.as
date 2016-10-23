@@ -9,7 +9,7 @@ package net.fpp.pandastory.game.service.websocketservice
 	{
 		function connect():void;
 
-		function join():void;
+		function join( characterTypeName:String ):void;
 
 		function sync( data:Object ):void;
 	}

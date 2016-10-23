@@ -12,7 +12,8 @@ package net.fpp.pandastory.menu.module.menulayout.view
 	{
 		public var viewContainer:DisplayObjectContainer;
 
-		private var _startGameButton:DisplayObject;
+		private var _startGameButtonA:DisplayObject;
+		private var _startGameButtonB:DisplayObject;
 
 		override protected function onInit():void
 		{
@@ -22,13 +23,17 @@ package net.fpp.pandastory.menu.module.menulayout.view
 
 		private function getViewObjects():void
 		{
-			this._startGameButton = this.viewContainer.getChildByName( 'startGameButton' );
+			this._startGameButtonA = this.viewContainer.getChildByName( 'startGameButtonA' );
+			this._startGameButtonB = this.viewContainer.getChildByName( 'startGameButtonB' );
 		}
 
 		private function setPositions():void
 		{
-			this._startGameButton.x = this.stage.stageWidth / 2 - this._startGameButton.width / 2;
-			this._startGameButton.y = this.stage.stageHeight / 2 - this._startGameButton.height / 2;
+			this._startGameButtonA.x = this.stage.stageWidth / 2 - this._startGameButtonA.width - 20;
+			this._startGameButtonA.y = this.stage.stageHeight / 2 - this._startGameButtonA.height / 2;
+
+			this._startGameButtonB.x = this.stage.stageWidth / 2 + 20;
+			this._startGameButtonB.y = this.stage.stageHeight / 2 - this._startGameButtonB.height / 2;
 		}
 	}
 }

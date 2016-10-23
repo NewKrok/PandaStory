@@ -6,8 +6,7 @@ package net.fpp.pandastory.constant
 	public class CSkinId
 	{
 		public static const GAME_BACKGROUND_WORLD_0_PART_0:String = 'game_background_world_0_part_0';
-		public static const GAME_BACKGROUND:String = 'back_world_2_a0000';
-		public static const MENU_BACKGROUND:String = 'back_world_2_b0000';
+		public static const MENU_BACKGROUND:String = 'game_background_world_0_part_0';
 		public static const START_GAME_BUTTON:String = 'task_button';
 
 		public static const LEFT_BUTTON:String = 'task_button';

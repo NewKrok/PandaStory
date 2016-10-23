@@ -5,6 +5,9 @@ package net.fpp.pandastory.menu.handler
 {
 	import net.fpp.common.starling.module.AHandler;
 	import net.fpp.common.starling.module.IApplicationContext;
+	import net.fpp.pandastory.config.character.EvilPandaCharacterVO;
+	import net.fpp.pandastory.config.character.PandaCharacterVO;
+	import net.fpp.pandastory.vo.PlayerInfoVO;
 
 	import starling.display.Button;
 	import starling.events.Event;
@@ -14,24 +17,42 @@ package net.fpp.pandastory.menu.handler
 		[Inject]
 		public var applicationContext:IApplicationContext;
 
-		private var _startGameButton:Button;
+		[Inject]
+		public var playerInfoVO:PlayerInfoVO;
 
-		public function StartGameHandler( startGameButton:Button )
+		private var _startGameButtonA:Button;
+		private var _startGameButtonB:Button;
+
+		public function StartGameHandler( startGameButtonA:Button, startGameButtonB:Button )
 		{
-			this._startGameButton = startGameButton;
+			this._startGameButtonA = startGameButtonA;
+			this._startGameButtonA.addEventListener( Event.TRIGGERED, this.onStartGameButtonATriggered );
 
-			this._startGameButton.addEventListener( Event.TRIGGERED, this.onStartGameButtonTriggered );
+			this._startGameButtonB = startGameButtonB;
+			this._startGameButtonB.addEventListener( Event.TRIGGERED, this.onStartGameButtonBTriggered );
 		}
 
-		private function onStartGameButtonTriggered( e:Event ):void
+		private function onStartGameButtonATriggered( e:Event ):void
 		{
+			this.playerInfoVO.characterVO = new PandaCharacterVO;
+
+			this.applicationContext.dispose();
+		}
+
+		private function onStartGameButtonBTriggered( e:Event ):void
+		{
+			this.playerInfoVO.characterVO = new EvilPandaCharacterVO;
+
 			this.applicationContext.dispose();
 		}
 
 		override public function dispose():void
 		{
-			this._startGameButton.removeEventListener( Event.TRIGGERED, this.onStartGameButtonTriggered );
-			this._startGameButton = null;
+			this._startGameButtonA.removeEventListener( Event.TRIGGERED, this.onStartGameButtonATriggered );
+			this._startGameButtonA = null;
+
+			this._startGameButtonB.removeEventListener( Event.TRIGGERED, this.onStartGameButtonBTriggered );
+			this._startGameButtonB = null;
 
 			this.applicationContext = null;
 		}

@@ -9,6 +9,7 @@ package net.fpp.pandastory
 	import net.fpp.pandastory.game.events.GameMainEvent;
 	import net.fpp.pandastory.menu.MenuMain;
 	import net.fpp.pandastory.menu.events.MenuMainEvent;
+	import net.fpp.pandastory.vo.PlayerInfoVO;
 
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -17,6 +18,8 @@ package net.fpp.pandastory
 	{
 		private var _menuMain:MenuMain;
 		private var _gameMain:GameMain;
+
+		private var _playerInfo:PlayerInfoVO = new PlayerInfoVO();
 
 		public function MainDomain()
 		{
@@ -31,6 +34,7 @@ package net.fpp.pandastory
 		private function createMenu():void
 		{
 			this._menuMain = new MenuMain();
+			this._menuMain.injector.mapToValue( PlayerInfoVO, this._playerInfo );
 			this._menuMain.addEventListener( MenuMainEvent.DISPOSED, this.onMenuMainRequest );
 
 			this.addChild( this._menuMain );
@@ -47,6 +51,7 @@ package net.fpp.pandastory
 		private function createGame():void
 		{
 			this._gameMain = new GameMain();
+			this._gameMain.injector.mapToValue( PlayerInfoVO, this._playerInfo );
 			this._gameMain.addEventListener( GameMainEvent.DISPOSED, this.onGameMainDisposed );
 
 			this.addChild( this._gameMain );

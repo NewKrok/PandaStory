@@ -81,9 +81,14 @@ package net.fpp.pandastory.util
 			return world_body;
 		}
 
-		public static function normalizePosition( position:Number ):Number
+		public static function physicsPositionToNormal( position:Number ):Number
 		{
 			return position * _pixelsToMetre;
+		}
+
+		public static function normalPositionToPhysics( position:Number ):Number
+		{
+			return position / _pixelsToMetre;
 		}
 	}
 }

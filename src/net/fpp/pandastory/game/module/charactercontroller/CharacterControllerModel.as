@@ -12,7 +12,8 @@ package net.fpp.pandastory.game.module.charactercontroller
 		public var isJumpActive:Boolean;
 
 		public var isJumpTriggered:Boolean;
+		public var isJumpStarted:Boolean;
 
-		public var jumpActivateTime:Number = 0;
+		public var availableJumpPush:Number = 0;
 	}
 }

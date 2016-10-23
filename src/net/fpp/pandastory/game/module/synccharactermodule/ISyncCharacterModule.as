@@ -3,6 +3,8 @@
  */
 package net.fpp.pandastory.game.module.synccharactermodule
 {
+	import net.fpp.pandastory.vo.CharacterVO;
+
 	public interface ISyncCharacterModule
 	{
 		function setCharacterDirection( direction:int ):void;
@@ -14,5 +16,7 @@ package net.fpp.pandastory.game.module.synccharactermodule
 		function getXPosition():Number;
 
 		function getYPosition():Number;
+
+		function setCharacterVO( value:CharacterVO ):void;
 	}
 }

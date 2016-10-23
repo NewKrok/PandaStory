@@ -16,6 +16,8 @@ package net.fpp.pandastory.game.module.character
 	import net.fpp.pandastory.game.module.character.view.CharacterModuleView;
 	import net.fpp.pandastory.game.module.characteranimation.ICharacterAnimationModule;
 	import net.fpp.pandastory.game.module.physicsworld.IPhysicsWorldModule;
+	import net.fpp.pandastory.util.PhysicsUtil;
+	import net.fpp.pandastory.vo.CharacterVO;
 
 	import starling.display.DisplayObjectContainer;
 
@@ -67,6 +69,12 @@ package net.fpp.pandastory.game.module.character
 			this.worldView.addChild( this._characterModuleView );
 		}
 
+		public function setCharacterVO( value:CharacterVO ):void
+		{
+			this._characterModel.setCharacterVO( value );
+			this._characterModuleView.updateSkin();
+		}
+
 		public function getCharacterPhysicsObject():b2Body
 		{
 			return this._characterModel.characterPhysicsObject;
@@ -115,11 +123,7 @@ package net.fpp.pandastory.game.module.character
 
 			if( this._characterModuleView.y > 500 )
 			{
-				this._characterModel.characterPhysicsObject.SetLinearVelocity( new b2Vec2( 0, 0 ) );
-				this._characterModel.characterPhysicsObject.SetPosition( new b2Vec2( 0, 0 ) );
-
-				this._characterModel.characterRadiusPhysicsObject.SetLinearVelocity( new b2Vec2( 0, 0 ) );
-				this._characterModel.characterRadiusPhysicsObject.SetPosition( new b2Vec2( 0, 0 ) );
+				this.setPosition( new SimplePoint( Math.random() * 900, Math.random() * 100 ) );
 			}
 		}
 
@@ -142,6 +146,22 @@ package net.fpp.pandastory.game.module.character
 			}
 
 			this._characterModel.setIsOnGround( isInGround );
+		}
+
+		public function getCharacterVO():CharacterVO
+		{
+			return this._characterModel.getCharacterVO();
+		}
+
+		public function setPosition( startPoint:SimplePoint ):void
+		{
+			var newPosition:b2Vec2 = new b2Vec2( PhysicsUtil.normalPositionToPhysics( startPoint.x ), PhysicsUtil.normalPositionToPhysics( startPoint.y ) );
+
+			this._characterModel.characterPhysicsObject.SetLinearVelocity( newPosition );
+			this._characterModel.characterPhysicsObject.SetPosition( newPosition );
+
+			this._characterModel.characterRadiusPhysicsObject.SetLinearVelocity( newPosition );
+			this._characterModel.characterRadiusPhysicsObject.SetPosition( newPosition );
 		}
 
 		public function getUpdateFrequency():int

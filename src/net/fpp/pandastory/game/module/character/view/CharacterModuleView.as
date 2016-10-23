@@ -8,7 +8,6 @@ package net.fpp.pandastory.game.module.character.view
 	import dragonBones.Armature;
 	import dragonBones.Bone;
 	import dragonBones.animation.WorldClock;
-	import dragonBones.events.AnimationEvent;
 
 	import net.fpp.common.starling.module.AModel;
 	import net.fpp.common.starling.module.AModuleView;
@@ -44,8 +43,8 @@ package net.fpp.pandastory.game.module.character.view
 		{
 			var position:b2Vec2 = this._characterModel.characterPhysicsObject.GetPosition();
 
-			this.x = PhysicsUtil.normalizePosition( position.x );
-			this.y = PhysicsUtil.normalizePosition( position.y ) + 15;
+			this.x = PhysicsUtil.physicsPositionToNormal( position.x );
+			this.y = PhysicsUtil.physicsPositionToNormal( position.y ) + 15;
 		}
 
 		public function init():void
@@ -58,6 +57,14 @@ package net.fpp.pandastory.game.module.character.view
 			this.idle();
 		}
 
+		public function updateSkin():void
+		{
+			this.setHeadSkin( this._characterModel.getCharacterVO().headSkin );
+			this.setBodySkin( this._characterModel.getCharacterVO().bodySkin );
+			this.setArmSkin( this._characterModel.getCharacterVO().armSkin );
+			this.setLegSkin( this._characterModel.getCharacterVO().legSkin );
+		}
+
 		public function setCharacterAnimation( value:Armature ):void
 		{
 			this._armature = value;
@@ -66,6 +73,54 @@ package net.fpp.pandastory.game.module.character.view
 			this.addChild( this._armatureClip );
 
 			this.idle();
+		}
+
+		private function setHeadSkin( name:String ):void
+		{
+			var newHead:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			var bone:Bone = this._armature.getBone( CUnitBones.HEAD );
+			bone.display.dispose();
+			bone.display = newHead;
+		}
+
+		private function setBodySkin( name:String ):void
+		{
+			var newBody:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			var bone:Bone = this._armature.getBone( CUnitBones.BODY );
+			bone.display.dispose();
+			bone.display = newBody;
+		}
+
+		private function setArmSkin( name:String ):void
+		{
+			var newArm:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			var bone:Bone = this._armature.getBone( CUnitBones.ARM_FRONT );
+			bone.display.dispose();
+			bone.display = newArm;
+
+			newArm = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			bone = this._armature.getBone( CUnitBones.ARM_BACK );
+			bone.display.dispose();
+			bone.display = newArm;
+		}
+
+		private function setLegSkin( name:String ):void
+		{
+			var newLeg:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			var bone:Bone = this._armature.getBone( CUnitBones.LEG_FRONT );
+			bone.display.dispose();
+			bone.display = newLeg;
+
+			newLeg = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
+
+			bone = this._armature.getBone( CUnitBones.LEG_BACK );
+			bone.display.dispose();
+			bone.display = newLeg;
 		}
 
 		public function updateState():void
@@ -140,34 +195,10 @@ package net.fpp.pandastory.game.module.character.view
 			this._armature.animation.gotoAndPlay( CUnitAnimation.FALL, 0, 0 );
 		}
 
-		public function changeSkin( type:int ):void
-		{
-			//this.setHeadSkin( CUnitSkins.WARRIOR_HEADS[type] );2
-		}
-
-		private function setHeadSkin( name:String ):void
-		{
-			var newHead:Image = this._characterModel.getCharacterAnimationModule().getTextureDisplay( name ) as Image;
-
-			var bone:Bone = this._armature.getBone( CUnitBones.HEAD );
-			bone.display.dispose();
-			bone.display = newHead;
-		}
-
-		private function aramtureEventHandler( e:AnimationEvent ):void
-		{
-			this._currentAnimation = '';
-
-			this._armature.removeEventListener( AnimationEvent.COMPLETE, this.aramtureEventHandler );
-
-			this.idle();
-		}
-
 		private function disposeArmature():void
 		{
 			WorldClock.clock.remove( this._armature );
 
-			this._armature.removeEventListener( AnimationEvent.COMPLETE, this.aramtureEventHandler );
 			this._armature.dispose();
 			this._armature = null;
 
